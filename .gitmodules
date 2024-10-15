@@ -1,0 +1,8 @@
+[submodule "third-party/moonlight-common-c"]
+	path = third-party/moonlight-common-c
+	url = https://github.com/moonlight-stream/moonlight-common-c.git
+	branch = master
+[submodule "third-party/nxdk"]
+	path = third-party/nxdk
+	url = https://github.com/XboxDev/nxdk.git
+	branch = master
