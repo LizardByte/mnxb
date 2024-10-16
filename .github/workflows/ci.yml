@@ -156,10 +156,9 @@ jobs:
 
       - name: Run tests
         id: test
-        if: false
         working-directory: build/tests
         run: |
-          ./test_moonlight-xboxog --gtest_color=yes
+          ./test_moonlight --gtest_color=yes
 
       - name: Generate gcov report
         # any except canceled or skipped

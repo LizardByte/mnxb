@@ -12,6 +12,11 @@ set(XBOX_XBE_DIR "${CMAKE_CURRENT_BINARY_DIR}/xbe")
 set(XBOX_ISO "${CMAKE_PROJECT_NAME}.iso")
 message(STATUS "XBOX_ISO: ${XBOX_ISO}")
 
+#
+# Options
+#
+option(BUILD_TESTS "Build tests" ON)
+
 # create the xbe directory if it doesn't exist
 file(MAKE_DIRECTORY ${XBOX_XBE_DIR})
 
@@ -30,14 +35,26 @@ add_definitions(-DXBOX -DNXDK)
 set(MOONLIGHT_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp"
 )
+set(MOONLIGHT_EXTERNAL_LIBRARIES
+        "${NXDK_DIR}/lib/libpbkit.lib"
+)
 
 add_executable(${CMAKE_PROJECT_NAME}
         ${MOONLIGHT_SOURCES}
 )
 include_directories("${NXDK_DIR}/lib")
-target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${NXDK_DIR}/lib/libpbkit.lib)
+target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC
+        ${MOONLIGHT_EXTERNAL_LIBRARIES}
+)
 
 target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE "")
+
+#
+# tests
+#
+if(BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
 
 # Post-build exe to xbe conversion
 add_custom_target(cxbe_convert ALL
