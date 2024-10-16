@@ -36,3 +36,11 @@
 
 # VSCode IDE
 .vscode/
+
+# build directories
+build/
+cmake-*/
+docs/doxyconfig*
+
+# iso file is created in project root
+*.iso

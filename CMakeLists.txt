@@ -1,0 +1,59 @@
+cmake_minimum_required(VERSION 3.14)
+# much of this file is borrowed from https://github.com/Ryzee119/Xenium-Tools/blob/master/CMakeLists.txt
+
+project(Moonlight C CXX)
+set(XBE_TITLE ${CMAKE_PROJECT_NAME})
+message(STATUS "XBE_TITLE: ${XBE_TITLE}")
+
+set(NXDK_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third-party/nxdk")
+message(STATUS "NXDK_DIR: ${NXDK_DIR}")
+
+set(XBOX_XBE_DIR "${CMAKE_CURRENT_BINARY_DIR}/xbe")
+set(XBOX_ISO "${CMAKE_PROJECT_NAME}.iso")
+message(STATUS "XBOX_ISO: ${XBOX_ISO}")
+
+# create the xbe directory if it doesn't exist
+file(MAKE_DIRECTORY ${XBOX_XBE_DIR})
+
+include(FindPkgConfig)
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+set(CMAKE_C_FLAGS_RELEASE "-O2")
+
+# Stop lots of warning spam
+add_compile_options(-Wno-builtin-macro-redefined)
+add_definitions(-DXBOX -DNXDK)
+
+set(MOONLIGHT_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp"
+)
+
+add_executable(${CMAKE_PROJECT_NAME}
+        ${MOONLIGHT_SOURCES}
+)
+include_directories("${NXDK_DIR}/lib")
+target_link_libraries(${CMAKE_PROJECT_NAME} PUBLIC ${NXDK_DIR}/lib/libpbkit.lib)
+
+target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE "")
+
+# Post-build exe to xbe conversion
+add_custom_target(cxbe_convert ALL
+        VERBATIM COMMAND "${CMAKE_COMMAND}" -E env ./tools/cxbe/cxbe -OUT:${XBOX_XBE_DIR}/default.xbe -TITLE:${XBE_TITLE} ${CMAKE_CURRENT_BINARY_DIR}/${XBE_TITLE}.exe
+        WORKING_DIRECTORY ${NXDK_DIR}
+        COMMENT "CXBE Conversion: [EXE -> XBE]"
+)
+add_dependencies(cxbe_convert ${CMAKE_PROJECT_NAME})
+
+# Post-build xbe to xiso conversion
+add_custom_target(xbe_iso ALL
+        VERBATIM COMMAND "${CMAKE_COMMAND}" -E env ${NXDK_DIR}/tools/extract-xiso/build/extract-xiso -c ${XBOX_XBE_DIR} ${XBOX_ISO}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "CXBE Conversion: [XBE -> XISO]"
+)
+add_dependencies(xbe_iso cxbe_convert)
+
+set_target_properties(cxbe_convert PROPERTIES OUTPUT_QUIET ON)
+set_target_properties(xbe_iso PROPERTIES OUTPUT_QUIET ON)

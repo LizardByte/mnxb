@@ -129,12 +129,23 @@ jobs:
 
       - name: Build
         run: |
-          eval "$(./third-party/nxdk/bin/activate -s)"
-          make
+          nxdk_dir="$(pwd)/third-party/nxdk"
+          eval "$(${nxdk_dir}/bin/activate -s)"
+          cd "${nxdk_dir}"
+          make NXDK_ONLY=y
+          make tools
+
+          cd "${GITHUB_WORKSPACE}"
+          mkdir -p build
+          cmake -DCMAKE_TOOLCHAIN_FILE="${nxdk_dir}/share/toolchain-nxdk.cmake" -B build -S .
+          cmake --build build
+
+          # recursively list all files in build directory
+          ls -R build
 
           # move artifacts
           mkdir -p artifacts
-          mv ./build/default.xbe ./artifacts
+          mv ./build/xbe/default.xbe ./artifacts
           mv ./Moonlight.iso ./artifacts
 
       - name: Upload Artifacts
