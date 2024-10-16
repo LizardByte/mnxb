@@ -4,6 +4,18 @@ cmake_minimum_required(VERSION 3.13)
 project(test_moonlight)
 
 include_directories("${CMAKE_SOURCE_DIR}")
+include_directories(SYSTEM ${MOONLIGHT_INCLUDE_DIRS})
+
+# nxdk include dirs, these are set by the toolchain for ALL targets except this one since we don't use the toolchain
+include_directories(SYSTEM
+        "${NXDK_DIR}/lib/libcxx/include"
+        "${NXDK_DIR}/lib"
+        "${NXDK_DIR}/lib/xboxrt/libc_extensions"
+        "${NXDK_DIR}/lib/pdclib/include"
+        "${NXDK_DIR}/lib/pdclib/platform/xbox/include"
+        "${NXDK_DIR}/lib/winapi"
+        "${NXDK_DIR}/lib/xboxrt/vcruntime"
+)
 
 enable_testing()
 
@@ -11,8 +23,8 @@ enable_testing()
 set(GTEST_SOURCE_DIR "${CMAKE_SOURCE_DIR}/third-party/googletest")
 set(INSTALL_GTEST OFF)
 set(INSTALL_GMOCK OFF)
-add_subdirectory("${GTEST_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/googletest")
-include_directories("${GTEST_SOURCE_DIR}/googletest/include" "${GTEST_SOURCE_DIR}")
+add_subdirectory("${GTEST_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/googletest" EXCLUDE_FROM_ALL)
+include_directories(SYSTEM "${GTEST_SOURCE_DIR}/googletest/include" "${GTEST_SOURCE_DIR}")
 
 # coverage
 # https://gcovr.com/en/stable/guide/compiling.html#compiler-options
@@ -33,6 +45,10 @@ file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS
 # TODO
 # list(REMOVE_ITEM MOONLIGHT_SOURCES ${CMAKE_SOURCE_DIR}/src/main.cpp)
 
+# Stop lots of warning spam
+add_compile_options(${MOONLIGHT_COMPILE_OPTIONS})
+add_definitions(${MOONLIGHT_DEFINITIONS})
+
 add_executable(${PROJECT_NAME}
         ${TEST_SOURCES}
         ${MOONLIGHT_SOURCES})
@@ -49,5 +65,7 @@ target_link_libraries(${PROJECT_NAME}
 target_compile_definitions(${PROJECT_NAME} PUBLIC ${MOONLIGHT_DEFINITIONS} ${TEST_DEFINITIONS})
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:${MOONLIGHT_COMPILE_OPTIONS}>)
 target_link_options(${PROJECT_NAME} PRIVATE)
+
+add_dependencies(${PROJECT_NAME} gtest gtest_main gmock gmock_main)
 
 add_test(NAME ${PROJECT_NAME} COMMAND moonlight_test)
