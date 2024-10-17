@@ -140,10 +140,7 @@ jobs:
 
           # the main target needs to be cross compiled
           echo "--- Building ALL ---"
-          cmake \
-            -B build \
-            -S . \
-            -DCMAKE_TOOLCHAIN_FILE="${nxdk_dir}/share/toolchain-nxdk.cmake"
+          cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE="${nxdk_dir}/share/toolchain-nxdk.cmake"
           cmake --build build
 
           # TODO: Tests are not building properly...
