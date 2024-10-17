@@ -161,7 +161,7 @@ jobs:
 
           # move artifacts
           mkdir -p artifacts
-          mv ./build/xbe/default.xbe ./artifacts
+          tar -czf ./artifacts/Moonlight.tar.gz ./build/xbe
           mv ./Moonlight.iso ./artifacts
 
       - name: Upload Artifacts
