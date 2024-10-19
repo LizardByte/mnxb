@@ -25,8 +25,6 @@ set(CMAKE_MODULE_PATH
 
 set(CMAKE_CXX_STANDARD 17)
 
-include(XBEUtils REQUIRED)
-
 find_package(NXDK REQUIRED)
 find_package(NXDK_SDL2 REQUIRED)
 find_package(NXDK_SDL2_Image REQUIRED)
