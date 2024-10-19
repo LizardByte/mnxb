@@ -129,9 +129,9 @@ jobs:
 
       - name: Build
         run: |
-          nxdk_dir="$(pwd)/third-party/nxdk"
-          eval "$(${nxdk_dir}/bin/activate -s)"
-          cd "${nxdk_dir}"
+          export NXDK_DIR="$(pwd)/third-party/nxdk"
+          eval "$(${NXDK_DIR}/bin/activate -s)"
+          cd "${NXDK_DIR}"
           make NXDK_ONLY=y
           make tools
 
@@ -140,7 +140,7 @@ jobs:
 
           # the main target needs to be cross compiled
           echo "--- Building ALL ---"
-          cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE="${nxdk_dir}/share/toolchain-nxdk.cmake"
+          cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE="${NXDK_DIR}/share/toolchain-nxdk.cmake"
           cmake --build build
 
           # TODO: Tests are not building properly...
