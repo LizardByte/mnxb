@@ -1,5 +1,5 @@
 #if defined(NXDK)
-#include <hal/debug.h>
+  #include <hal/debug.h>
 #else
-#define debugPrint(...) printf(__VA_ARGS__)
+  #define debugPrint(...) printf(__VA_ARGS__)
 #endif

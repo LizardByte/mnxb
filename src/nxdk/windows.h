@@ -1,5 +1,5 @@
 #if defined(NXDK)
-#include <windows.h>
+  #include <windows.h>
 #else
-#define Sleep(x) SDL_Delay(x)
+  #define Sleep(x) SDL_Delay(x)
 #endif

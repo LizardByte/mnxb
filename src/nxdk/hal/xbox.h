@@ -1,5 +1,5 @@
 #if defined(NXDK)
-#include <hal/xbox.h>
+  #include <hal/xbox.h>
 #else
-#define XReboot(...) exit(555)
+  #define XReboot(...) exit(555)
 #endif
