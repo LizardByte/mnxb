@@ -66,7 +66,7 @@ This script takes care of everything, except installing the prerequisites.
       - [x] Separate main build and unit test builds, due to cross compiling, see https://stackoverflow.com/a/64335131/11214013
       - [ ] Get tests to properly compile
       - [ ] Enable codecov
-   - [ ] Enable sonarcloud
+   - [x] Enable sonarcloud
    - [ ] Build moonlight-common-c
       - [ ] Build custom enet, depends on https://github.com/XboxDev/nxdk/pull/680 or https://github.com/thrimbor/nxdk/tree/winsock/lib/winapi (seems unlikely nxdk will ever be ready for this, could definitely use some help with this)
 - Menus / Screens
