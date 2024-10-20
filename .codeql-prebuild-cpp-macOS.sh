@@ -1,4 +1,4 @@
-# install dependencies for C++ analysis
+#!/bin/bash
 set -e
 
 # install dependencies
@@ -11,15 +11,15 @@ dependencies=(
 brew install "${dependencies[@]}"
 
 # build
-nxdk_dir="$(pwd)/third-party/nxdk"
-eval "$(${nxdk_dir}/bin/activate -s)"
-cd "${nxdk_dir}"
+export NXDK_DIR="$(pwd)/third-party/nxdk"
+eval "$(${NXDK_DIR}/bin/activate -s)"
+cd "${NXDK_DIR}"
 make NXDK_ONLY=y
 make tools
 
 cd "${GITHUB_WORKSPACE}"
 mkdir -p build
-cmake -DCMAKE_TOOLCHAIN_FILE="${nxdk_dir}/share/toolchain-nxdk.cmake" -B build -S .
+cmake -DCMAKE_TOOLCHAIN_FILE="${NXDK_DIR}/share/toolchain-nxdk.cmake" -B build -S .
 cmake --build build
 
 # skip autobuild

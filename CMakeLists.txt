@@ -109,6 +109,3 @@ add_dependencies(xbe_iso cxbe_convert)
 
 set_target_properties(cxbe_convert PROPERTIES OUTPUT_QUIET ON)
 set_target_properties(xbe_iso PROPERTIES OUTPUT_QUIET ON)
-
-#add_xbe(xbe_file "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.exe" TITLE "${XBE_TITLE}" RESOURCE_DIRS xbe)
-#add_xiso(xiso xbe_file XISO ${XBOX_ISO})
