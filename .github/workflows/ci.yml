@@ -213,7 +213,8 @@ jobs:
           verbose: true
 
       - name: Create/Update GitHub Release
-        if: ${{ needs.setup_release.outputs.publish_release == 'true' }}
+        # only publish release on ubuntu-latest, is there any difference between the different builds?
+        if: ${{ needs.setup_release.outputs.publish_release == 'true' && matrix.os == 'ubuntu-latest' }}
         uses: LizardByte/create-release-action@v2024.919.143026
         with:
           allowUpdates: true
